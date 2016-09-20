@@ -21,20 +21,20 @@ class CheckoutSpec extends FreeSpec with Matchers {
       }
     }
 
-    "return proper price output for list of correct items equal to £ 2.55" in {
-      Checkout.processor(listOfValidItems) shouldBe "[apple, orange] = £ 2.55"
-    }
-    "return proper price output equal to double list of correct items equal to £5.10" in {
-      Checkout.processor(listOf2xValidItems) shouldBe "[apple, orange] = £ 5.10"
-    }
-    "return `Nothing to process`" in {
+    "test of empty list should return `Nothing to process`" in {
       Checkout.processor(Nil) shouldBe "Nothing to process"
     }
-    "return `Their is no apples or oranges`" in {
+    "test of invalid list of products should return `Their is no apples or oranges`" in {
       Checkout.processor(listOfInvalidItems) shouldBe "Their is no apples or oranges"
     }
-    "return proper price for mics list equal to £2.55" in {
-      Checkout.processor(micsListOfItems) shouldBe "[apple, orange] = £ 2.55"
+    "test with the valid items list should show `3x apple` and `3x orange` and total cost equal to £ 2.55" in {
+      Checkout.processor(listOfValidItems) shouldBe "[3x apple, 3x orange] = £ 2.55"
+    }
+    "test with twice longer the valid items list should show `6x apple` and `6x orange` and total cost equal to £ 5.10" in {
+      Checkout.processor(listOf2xValidItems) shouldBe "[6x apple, 6x orange] = £ 5.10"
+    }
+    "test with mix of the valid items list  and the invalid item list should show `3x apple` and `3x orange` and total cost equal to £ 2.55" in {
+      Checkout.processor(micsListOfItems) shouldBe "[3x apple, 3x orange] = £ 2.55"
     }
   }
 }
