@@ -1,9 +1,12 @@
 package net.atos.kjc.fruitshop.checkoutsystem
 
 object Checkout {
+  type FilteredProducts = Map[String, Int]
+  type Offers = Map[String, (Int, Int)]
+
   val prices: Map[String, Double] = Map("apple" -> 0.60, "orange" -> 0.25)
 
-  type FilteredProducts = Map[String, Int]
+  val offers: Offers = Map("apple" -> (2, 1), "orange" -> (3, 2))
 
   def processor(listOfItems: List[String]): String = {
 
@@ -30,9 +33,19 @@ object Checkout {
     }
 
     lazy val calculateTotal: (List[String], Double) =
-      filter.foldLeft((List[String](), 0.0d))((acc, entry) =>
-        (acc._1 :+ s"${entry._2}x ${entry._1}", acc._2 + entry._2 * prices.getOrElse(entry._1, 0.0d))
-      )
+      filter.foldLeft((List[String](), 0.0d)) { (acc, entry) =>
+        val (name, totalQty) = entry
+        val (accName, accTotalQty) = acc
+        val unitCost = prices.getOrElse(name, 0.0d)
+        val totalCost = offers.get(name) match {
+          case None => accTotalQty + totalQty * unitCost
+          case Some((amount, priceInRelationToUnitCost)) =>
+            val qtyNotIncludedInOffer = totalQty % amount
+            accTotalQty + (unitCost * priceInRelationToUnitCost * (totalQty - qtyNotIncludedInOffer) / amount) + (unitCost * qtyNotIncludedInOffer)
+        }
+
+        (accName :+ s"${totalQty}x ${name}", totalCost)
+      }
 
     if (listOfItems.isEmpty)
       "Nothing to process"
