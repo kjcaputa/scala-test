@@ -1,9 +1,12 @@
 package net.atos.kjc.fruitshop.checkoutsystem
 
 object Checkout {
+  type FilteredProducts = Map[String, Int]
+  type Offers = Map[String, (Int, Int)]
+
   val prices: Map[String, Double] = Map("apple" -> 0.60, "orange" -> 0.25)
 
-  type FilteredProducts = Map[String, Int]
+  val offers: Offers = ???
 
   def processor(listOfItems: List[String]): String = {
 

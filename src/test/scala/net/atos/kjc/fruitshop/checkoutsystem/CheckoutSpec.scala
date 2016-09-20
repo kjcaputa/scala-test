@@ -27,14 +27,34 @@ class CheckoutSpec extends FreeSpec with Matchers {
     "test of invalid list of products should return `Their is no apples or oranges`" in {
       Checkout.processor(listOfInvalidItems) shouldBe "Their is no apples or oranges"
     }
-    "test with the valid items list should show `3x apple` and `3x orange` and total cost equal to £ 2.55" in {
-      Checkout.processor(listOfValidItems) shouldBe "[3x apple, 3x orange] = £ 2.55"
+    "test with the valid items list should show `3x apple` and `3x orange` and total cost equal to £ 1.70" in {
+      Checkout.processor(listOfValidItems) shouldBe "[3x apple, 3x orange] = £ 1.70"
     }
-    "test with twice longer the valid items list should show `6x apple` and `6x orange` and total cost equal to £ 5.10" in {
-      Checkout.processor(listOf2xValidItems) shouldBe "[6x apple, 6x orange] = £ 5.10"
+    "test with twice longer the valid items list should show `6x apple` and `6x orange` and total cost equal to £ 2.80" in {
+      Checkout.processor(listOf2xValidItems) shouldBe "[6x apple, 6x orange] = £ 2.80"
     }
-    "test with mix of the valid items list  and the invalid item list should show `3x apple` and `3x orange` and total cost equal to £ 2.55" in {
-      Checkout.processor(micsListOfItems) shouldBe "[3x apple, 3x orange] = £ 2.55"
+    "test with mix of the valid items list  and the invalid item list should show `3x apple` and `3x orange` and total cost equal to £ 1.70" in {
+      Checkout.processor(micsListOfItems) shouldBe "[3x apple, 3x orange] = £ 1.70"
+    }
+    "Offers check" - {
+      "single apple" in {
+        Checkout.processor(List("apple")) shouldBe "[1x apple] = £ 0.60"
+      }
+      "two apples" in {
+        Checkout.processor(List("apple", "apple")) shouldBe "[2x apple] = £ 0.60"
+      }
+      "three apples" in {
+        Checkout.processor(List("apple", "apple", "apple")) shouldBe "[3x apple] = £ 1.20"
+      }
+      "single orange" in {
+        Checkout.processor(List("orange")) shouldBe "[1x orange] = £ 0.25"
+      }
+      "two oranges" in {
+        Checkout.processor(List("orange", "orange")) shouldBe "[2x orange] = £ 0.50"
+      }
+      "three oranges" in {
+        Checkout.processor(List("orange", "orange", "orange")) shouldBe "[3x orange] = £ 0.50"
+      }
     }
   }
 }
