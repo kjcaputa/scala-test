@@ -31,14 +31,15 @@ object Checkout {
 
     lazy val calculateTotal: (List[String], Double) =
       filter.foldLeft((List[String](), 0.0d))((acc, entry) =>
-        (acc._1 :+ (entry._2 + "x " + entry._1), acc._2 + entry._2 * prices.getOrElse(entry._1, 0.0d))
+        (acc._1 :+ s"${entry._2}x ${entry._1}", acc._2 + entry._2 * prices.getOrElse(entry._1, 0.0d))
       )
 
     if (listOfItems.isEmpty)
       "Nothing to process"
     else if (filter.keys.isEmpty)
       "Their is no apples or oranges"
-    else
+    else {
       "[%s] = £ %2.2f".format(calculateTotal._1.mkString(", "), calculateTotal._2)
+    }
   }
 }
